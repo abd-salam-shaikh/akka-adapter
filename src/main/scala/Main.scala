@@ -1,5 +1,5 @@
 import akka.actor.{ActorSystem, Props}
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.{JsNumber, Json}
 
 import scala.concurrent.duration._
 import scala.util.Random
@@ -9,16 +9,27 @@ import scala.util.Random
   */
 object Main extends App {
   val system = ActorSystem("RightnowSystem")
-  val remotePath = "akka.tcp://MicroMongoSystem@127.0.0.1:2552/user/mongoactor"
-  val actor = system.actorOf(Props(classOf[LookupActor], remotePath), "lookupActor")
+  val microMongoPath = "akka.tcp://MicroMongoSystem@127.0.0.1:2552/user/mongoactor"
+  val elasticPath = "akka.tcp://MongosticSystem@127.0.0.1:2554/user/elastic-actor"
+  val mongoActor = system.actorOf(Props(classOf[LookupActor], microMongoPath), "mongoLookupActor")
+  val elasticActor = system.actorOf(Props(classOf[LookupActor], elasticPath), "elasticLookupActor")
 
   println("Started LookupSystem")
 
   import system.dispatcher
+
+  var counter: BigDecimal = 0.0
   system.scheduler.schedule(1.second, 1.second) {
-    if (Random.nextInt(100) % 2 == 0)
-      actor ! Json.obj(("gallery",JsString("test val")))
-    else
-      actor ! Json.obj(("product",JsString("test val")))
+    counter = counter.+(1)
+    val doc = Json.obj(("faq", JsNumber(counter)))
+
+    if (Random.nextInt(100) % 2 == 0) {
+      mongoActor ! doc
+      elasticActor ! doc
+    }
+    else {
+      mongoActor ! doc
+      elasticActor ! doc
+    }
   }
 }

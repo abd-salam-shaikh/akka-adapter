@@ -28,12 +28,6 @@ class LookupActor(path: String) extends Actor {
     case doc: JsObject =>
       println(s"sending doc $doc")
       actor ! doc
-//    case result: MathResult => result match {
-//      case AddResult(n1, n2, r) =>
-//        printf("Add result: %d + %d = %d\n", n1, n2, r)
-//      case SubtractResult(n1, n2, r) =>
-//        printf("Sub result: %d - %d = %d\n", n1, n2, r)
-//    }
     case Terminated(`actor`) =>
       println("Calculator terminated")
       sendIdentifyRequest()
