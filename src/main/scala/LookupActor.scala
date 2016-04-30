@@ -21,7 +21,7 @@ class LookupActor(path: String) extends Actor {
       context.become(active(actor))
     case ActorIdentity(`path`, None) => println(s"Remote actor not available: $path")
     case ReceiveTimeout              => sendIdentifyRequest()
-    case _                           => println("Not ready yet")
+    case _                           => println(s"Not ready yet:$path")
   }
 
   def active(actor: ActorRef): Actor.Receive = {

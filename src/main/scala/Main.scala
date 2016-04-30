@@ -9,9 +9,10 @@ import scala.util.Random
   */
 object Main extends App {
   val system = ActorSystem("RightnowSystem")
-  val microMongoPath = "akka.tcp://MicroMongoSystem@127.0.0.1:2552/user/mongoactor"
-  val elasticPath = "akka.tcp://MongosticSystem@127.0.0.1:2554/user/elastic-actor"
+
+  val microMongoPath = "akka.tcp://MicroMongoSystem@127.0.0.1:2552/user/mongo-actor"
   val mongoActor = system.actorOf(Props(classOf[LookupActor], microMongoPath), "mongoLookupActor")
+  val elasticPath = "akka.tcp://MongosticSystem@127.0.0.1:2554/user/elastic-actor"
   val elasticActor = system.actorOf(Props(classOf[LookupActor], elasticPath), "elasticLookupActor")
 
   println("Started LookupSystem")
