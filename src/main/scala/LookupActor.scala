@@ -25,7 +25,9 @@ class LookupActor(path: String) extends Actor {
   }
 
   def active(actor: ActorRef): Actor.Receive = {
-    case doc: JsObject => actor ! doc
+    case doc: JsObject =>
+      println(s"sending doc $doc")
+      actor ! doc
 //    case result: MathResult => result match {
 //      case AddResult(n1, n2, r) =>
 //        printf("Add result: %d + %d = %d\n", n1, n2, r)
