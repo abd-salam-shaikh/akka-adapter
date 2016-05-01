@@ -2,7 +2,6 @@ import akka.actor.{ActorSystem, Props}
 import play.api.libs.json.{JsNumber, Json}
 
 import scala.concurrent.duration._
-import scala.util.Random
 
 /**
   * Created by trozozti on 29/04/16.
@@ -24,13 +23,7 @@ object Main extends App {
     counter = counter.+(1)
     val doc = Json.obj(("faq", JsNumber(counter)))
 
-    if (Random.nextInt(100) % 2 == 0) {
-      mongoActor ! doc
-      elasticActor ! doc
-    }
-    else {
-      mongoActor ! doc
-      elasticActor ! doc
-    }
+    mongoActor ! doc
+    elasticActor ! doc
   }
 }
